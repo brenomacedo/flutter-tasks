@@ -50,6 +50,30 @@ class _HomeState extends State<Home>{
         centerTitle: true,
         backgroundColor: Colors.red
       ),
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(17.0, 1.0, 7.0, 1.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "Nova tarefa",
+                      labelStyle: TextStyle(color: Colors.red),
+                    )
+                  ),
+                ),
+                RaisedButton(
+                  color: Colors.red,
+                  child: Text("Add", style: TextStyle(color: Colors.white)),
+                  onPressed: () {},
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
