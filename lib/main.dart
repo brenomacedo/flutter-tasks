@@ -21,6 +21,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home>{
 
   List _toDoList = [];
+  Map<String, dynamic> _lastRemoved;
+  int _lastRemovedIndex;
 
   @override
   void initState() {
@@ -92,6 +94,32 @@ class _HomeState extends State<Home>{
         },
       ),
       key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
+      onDismissed: (direction) {
+        _lastRemoved = Map.from(_toDoList[index]);
+        _lastRemovedIndex = index;
+        
+        setState(() {
+          _toDoList.removeAt(index);
+        });
+
+        _saveData();
+
+        SnackBar snack = SnackBar(
+          content: Text("Tarefa \"${_lastRemoved["title"]}\" removida!"),
+          action: SnackBarAction(
+            label: "Desfazer",
+            onPressed: () {
+              setState(() {
+                _toDoList.insert(_lastRemovedIndex, _lastRemoved);
+              });
+            }
+          ),
+          duration: Duration(seconds: 2)
+        );
+
+        Scaffold.of(context).showSnackBar(snack);
+
+      },
     );
   }
 
