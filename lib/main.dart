@@ -20,7 +20,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home>{
 
-  List _toDoList = ["Breno", "Macedo"];
+  List _toDoList = [];
+
+  TextEditingController addController = TextEditingController();
+
+  void _addTodo() {
+    setState(() {
+      Map<String, dynamic> newTodo = Map();
+      newTodo["title"] = addController.text;
+      newTodo["ok"] = false;
+      addController.text = "";
+      _toDoList.add(newTodo);
+    });
+  }
 
   Future<File> _getFile() async {
     Directory directory = await getApplicationDocumentsDirectory();
@@ -61,13 +73,14 @@ class _HomeState extends State<Home>{
                     decoration: InputDecoration(
                       labelText: "Nova tarefa",
                       labelStyle: TextStyle(color: Colors.red),
-                    )
+                    ),
+                    controller: addController
                   ),
                 ),
                 RaisedButton(
                   color: Colors.red,
                   child: Text("Add", style: TextStyle(color: Colors.white)),
-                  onPressed: () {},
+                  onPressed: _addTodo,
                 )
               ],
             ),
@@ -78,12 +91,16 @@ class _HomeState extends State<Home>{
               itemCount: _toDoList.length,
               itemBuilder: (context, index) {
                 return CheckboxListTile(
-                  title: Text(_toDoList[index]),
+                  title: Text(_toDoList[index]["title"]),
                   value: _toDoList[index]["ok"],
                   secondary: CircleAvatar(
                     child: Icon(_toDoList[index]["ok"] ? Icons.check : Icons.error),
                   ),
-                  onChanged: (test) {},
+                  onChanged: (c) {
+                    setState(() {
+                      _toDoList[index]["ok"] = c;
+                    });
+                  },
                 );
               },
             )
