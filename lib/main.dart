@@ -69,6 +69,22 @@ class _HomeState extends State<Home>{
     }
   }
 
+  Future<Null> _refresh() async {
+    await Future.delayed(Duration(milliseconds: 500));
+
+    setState(() {
+      _toDoList.sort((a, b) {
+        if(a["ok"] && !b["ok"]) return 1;
+        else if(a["ok"] && b["ok"]) return 0;
+        else return -1;
+      });
+
+      _saveData();
+    });
+
+    return null;
+  }
+
   Widget buildItem (context, index) {
     return Dismissible(
       background: Container(
@@ -123,8 +139,6 @@ class _HomeState extends State<Home>{
     );
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,10 +171,13 @@ class _HomeState extends State<Home>{
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.only(top: 10.0),
-              itemCount: _toDoList.length,
-              itemBuilder: buildItem
+            child: RefreshIndicator(
+              child: ListView.builder(
+                padding: EdgeInsets.only(top: 10.0),
+                itemCount: _toDoList.length,
+                itemBuilder: buildItem
+              ),
+              onRefresh: _refresh,
             )
           )
         ],
