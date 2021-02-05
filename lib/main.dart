@@ -67,6 +67,36 @@ class _HomeState extends State<Home>{
     }
   }
 
+  Widget buildItem (context, index) {
+    return Dismissible(
+      background: Container(
+        color: Colors.blue,
+        child: Align(
+          child: Icon(Icons.delete, color: Colors.white),
+          alignment: Alignment(-0.9, 0.0),
+        ),
+      ),
+      direction: DismissDirection.startToEnd,
+      child: CheckboxListTile(
+        title: Text(_toDoList[index]["title"]),
+        value: _toDoList[index]["ok"],
+        secondary: CircleAvatar(
+          child: Icon(_toDoList[index]["ok"] ? Icons.check : Icons.error),
+        ),
+        onChanged: (c) {
+          setState(() {
+            _toDoList[index]["ok"] = c;
+
+            _saveData();
+          });
+        },
+      ),
+      key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
+    );
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,22 +132,7 @@ class _HomeState extends State<Home>{
             child: ListView.builder(
               padding: EdgeInsets.only(top: 10.0),
               itemCount: _toDoList.length,
-              itemBuilder: (context, index) {
-                return CheckboxListTile(
-                  title: Text(_toDoList[index]["title"]),
-                  value: _toDoList[index]["ok"],
-                  secondary: CircleAvatar(
-                    child: Icon(_toDoList[index]["ok"] ? Icons.check : Icons.error),
-                  ),
-                  onChanged: (c) {
-                    setState(() {
-                      _toDoList[index]["ok"] = c;
-
-                      _saveData();
-                    });
-                  },
-                );
-              },
+              itemBuilder: buildItem
             )
           )
         ],
